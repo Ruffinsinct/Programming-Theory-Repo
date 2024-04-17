@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRb;
 
+    private float horizontalRotation = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,29 +25,22 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        Vector3 cameraForward = Vector3.Scale(cameraTransform.forward, new Vector3(1, 0, 1)).normalized;
-        Vector3 movement = moveVertical * cameraForward + moveHorizontal * cameraTransform.right;
+    
+        Vector3 movement = new Vector3(moveHorizontal, 0f, moveVertical).normalized;
 
-        movement.Normalize();
+    
 
-        playerRb.velocity = movement * speed;
+        playerRb.velocity = transform.forward * movement.z * speed;
 
         float rotation = moveHorizontal * rotationSpeed * Time.deltaTime;
 
 
         transform.Rotate(Vector3.up, rotation);
 
-        RotateCameraWithPlayer(rotation);
+        horizontalRotation += Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+        horizontalRotation = Mathf.Clamp(horizontalRotation, -90f, 90f);
 
-
-    }
-    
-    void RotateCameraWithPlayer(float rotationAmount)
-    {
-        if (cameraTransform != null)
-        {
-            cameraTransform.Rotate(Vector3.right, rotationAmount);
-        }
+        cameraTransform.localEulerAngles = new Vector3(horizontalRotation, cameraTransform.localEulerAngles.y, cameraTransform.localEulerAngles.z);
     }
 
     void OnCollisionEnter(Collision collision)

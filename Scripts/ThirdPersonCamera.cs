@@ -25,7 +25,7 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         Vector3 desiredPosition = player.position - player.forward * distance + Vector3.up * height;
 
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, new Vector3(desiredPosition.x, transform.position.y, desiredPosition.z), smoothSpeed);
 
         transform.position = smoothedPosition;
 
